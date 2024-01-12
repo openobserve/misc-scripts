@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  netflow
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goflow2
+  namespace: netflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goflow2
+  template:
+    metadata:
+      labels:
+        app: goflow2
+    spec:
+      containers:
+      - name: goflow2
+        image: netsampler/goflow2:c38607d
+        ports:
+        - name: sflow
+          containerPort: 6343
+          protocol: UDP
+        - name: netflow
+          containerPort: 2055
+          protocol: UDP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goflow2
+  namespace: netflow
+spec:
+  selector:
+    app: goflow2
+  ports:
+    - name: sflow
+      protocol: UDP
+      port: 6343
+      targetPort: 6343
+    - name: netflow
+      protocol: UDP
+      port: 2055
+      targetPort: 2055
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nflow-generator-deployment
+  namespace: netflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nflow-generator
+  template:
+    metadata:
+      labels:
+        app: nflow-generator
+    spec:
+      containers:
+      - name: nflow-generator
+        image: networkstatic/nflow-generator
+        args: ["-t", "goflow2", "-p", "2055"]

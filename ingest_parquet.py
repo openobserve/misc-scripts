@@ -18,6 +18,7 @@ logs_path = sys.argv[1]
 # print(entries)
 
 
+
 for root, dirs, files in os.walk(logs_path):
     for name in files:
         file = os.path.join(root, name)
@@ -41,8 +42,7 @@ for root, dirs, files in os.walk(logs_path):
             chunk = df.iloc[start_index:end_index]
 
             # Convert dataframe chunk to JSON and remove unicode characters
-            data = chunk.to_json(
-                orient='records', lines=True, force_ascii=False)
+            data = chunk.to_json(orient='records', lines=True, force_ascii=False)
 
             headers = {
                 "Authorization": authorization_header,
