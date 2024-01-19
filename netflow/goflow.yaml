@@ -22,7 +22,13 @@ spec:
     spec:
       containers:
       - name: goflow2
-        image: netsampler/goflow2:c38607d
+        image: ghcr.io/openobserve/goflow2:v100.0.1
+        args:
+          - "-transport=http"
+          - "-transport.http.destination=http:/<o2-endpoint>/api/default/netflow1/_json"
+          - "-transport.http.batchSize=1000"
+          - "-transport.http.auth.header=Authorization"
+          - "-transport.http.auth.credentials=Basic <o2 ingestion tooken>"
         ports:
         - name: sflow
           containerPort: 6343
@@ -55,7 +61,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nflow-generator-deployment
+  name: nflow-generator
   namespace: netflow
 spec:
   replicas: 1
