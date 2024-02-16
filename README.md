@@ -20,3 +20,5 @@ gsutil -m cp -r \
 ```bash
 python ingest_parquet.py logs/00
 ```
+
+
