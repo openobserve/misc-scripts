@@ -2,9 +2,10 @@ import pandas as pd
 import requests
 import os
 from requests.auth import HTTPBasicAuth
+from dotenv import load_dotenv
 
-# Define the endpoint URL
-ENDPOINT_URL = "http://your-http-endpoint.com/data"
+load_dotenv()  # take environment variables from .env.
+
 
 # List of CSV file paths
 csv_files = ["./csv/1_7feb.csv", "./csv/2_7feb.csv", "./csv/3_7feb.csv", "./csv/4_7feb.csv", "./csv/5_7feb.csv", "./csv/1_7feb.csv", "./csv/6_7feb.csv", "./csv/7_7feb.csv", ]  # Add your file paths here
@@ -15,9 +16,11 @@ def send_batch_to_endpoint(batch_data):
     
     :param batch_data: List of dictionaries representing the rows to send
     """
-    ENDPOINT_URL = "https://api.openobserve.ai/api/trendit1_qT2ghgBwyF7wPKe/atm1/_json"
-    USERNAME = "prabhat@openobserve.ai"
-    PASSWORD = "21Z7E495SI3G8Ag60pCf"
+
+    ENDPOINT_URL = os.getenv('ENDPOINT_URL')
+    USERNAME = os.getenv('USERNAME')
+    PASSWORD = os.getenv('PASSWORD')
+
     try:
         # Include the auth parameter in the post request
         response = requests.post(
